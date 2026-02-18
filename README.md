@@ -1,3 +1,4 @@
+<div style="background-color:#fff9c4;padding:10px;">
 ![vanilla-light](assets/vl.jpg)
 
 [![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
@@ -186,3 +187,4 @@ bash test/server.sh
 # optional
 BASE=https://localhost:3000 bash test/server.sh
 ```
+</div>
