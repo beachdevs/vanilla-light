@@ -1,34 +1,42 @@
-# vanilla-light
-[![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light)
-[![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
+![vanilla-light](assets/vl.jpg)
+[![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
 
 Vanilla-light is a no-build, dependency-free full-stack framework with a reactive browser client and an HTTPS Bun server.
-It is designed for split deployment: static frontend on CDN + API backend with plugin-driven routes.
 
-- no frontend build step
-- no runtime npm dependencies
-- standalone frontend/backend deployment
-- reactive `window.state` + custom web components
-- plugin-driven backend (`src/plugins/*`)
-- auth (auth0, bearer) | db (jsonl) | llm (openrouter)
+###### Why I built this
+This is the culmination of 20 years of writing, rewriting, imagining, and re-imagining what is the minimal core framework and best abstraction of the web client/server model.
+
+Web standards give us all the tools we need to create applications. Removing complexity and the sheer number of things you have to learn makes them easier to build. 
+
+Sophisticated server and client rendering schemes, bloated thousand-dependency builds, and quirky frame dependent abstractions do not belong here.
+
+Most apps are really not that complex. They consist of a front-end, back-end server, auth, storage, and (lately) communication with llms.
+
+Vanilla light is an easy to adopt minimal core for humans to build things, to more quickly go from imagination to application.
+
+###### Features
+- Standalone front and back-ends
+- Can be hosted separately
+- No frontend build step
+- No runtime npm dependencies
+- Reactive `window.state` + custom web components
+- Plugin-driven backend (`src/plugins`)
+- Auth (auth0, bearer) | Db (jsonl) | llm (openrouter)
 
 ## Quick Start
 ```bash
-bun run hot
-# or
-bun run start
+npx vanilla-light
 ```
-Default server URL: `https://localhost:3000`
+Or clone this repo:
+```
+$ bun start.
+```
 
-`bun install` is not needed for this project right now because it has no runtime npm dependencies.
-
-To run HTTP instead of HTTPS, set `disable_ssl: true` in config.
-
-## CLI
-Run commands with any of these:
+###### CLI
+Manage server with:
 ```bash
-bun bin/cli.js <command>
 npx vanilla-light <command>
+-- or --
 vlserver <command>
 ```
 
@@ -43,54 +51,66 @@ vlserver certsdir certs
 vlserver +plugin auth/bearer.js
 vlserver -plugin auth/bearer.js
 ```
-
-Notes:
-- `vlserver config` prints active config path + config JSON
-- `+plugin` errors if plugin file does not exist under `src/plugins`
-- `certsdir` errors if the directory does not exist
-
-## Configuration
-Default config shape:
+###### Configuration 
+~/.vanilla-light/config.json
 ```json
 {
-  "use_plugins": [],
+  "use_plugins": [
+    "always/logging.js",
+    "auth/auth0.js",
+    "auth/bearer.js",
+    "storage/s3.js",
+    "storage/kvfile.js",
+    "llm/llmchat.js"
+  ],
   "port": 3000,
-  "disable_ssl": false,
+  "disable_ssl": true,
   "certs_dir": "certs"
 }
 ```
+Https should generally be used.
+Enable SSL, except when behind a reverse-proxy.
 
-Config resolution order:
-1. `~/.vanilla-light/config.json`
-2. `./config.json`
-3. built-in defaults
-
-## Layout
-- `src/server.js`: server + route dispatch
-- `src/plugins/`: `always`, `auth`, `storage`, `llm`
-- `public/client.js`: browser API
-- `public/components.js`: exported `components` registry
-- `public/index.html`: full demo
-- `test/server.sh`: integration smoke tests
-
-## Deployment Model
-Run frontend and backend separately:
-- Backend: Bun server (`src/server.js`)
-- Frontend: static/CDN host (`client.js`, `components.js`, HTML)
+###### Frontend
+The front-end consists of a client.js file, which contains
+helper functions to send/get key vals stored on the server.
 
 Client import:
 ```js
+import { $, $$, get, set, del, me } from 'client.js'
+-- or --
 import { $, $$, get, set, del, me } from 'https://unpkg.com/vanilla-light'
 ```
 
-Reverse-proxy TLS termination example:
-```json
-{ "disable_ssl": true }
+Web components are defined and used in the simplest way. A components.js file which contains their definitions.
+
+All components are assigned to window.custom, and defined in a single components.js.
+A component is simply a function that returns (or renders html) and run at page load
+
 ```
+window.custom = 
+{
+  "simple-hello": ()=>`Hello world!`,
+  "hello-world": {
+    prop: (data) => `${data} World`,
+    render: function(data) { 
+      return this.prop(data); 
+    }
+  }
+}
+```
+Included in your HTML
+```
+<script src='components.js></script>
+```
+
+###### Client server architecture
 
 ![Client/server architecture](https://i.ibb.co/hJL6dMqn/clientserver.png)
 
-## Required Env (Current Plugins)
+###### Server secrets
+Plugins get their secrets (api keys, etc..) from env
+
 ```bash
 AUTH0_DOMAIN=...
 AUTH0_CLIENT_ID=...
@@ -102,16 +122,19 @@ CLOUDFLARE_PUBLIC_URL=...
 OPENROUTER_API_KEY=...
 ```
 
-## API Overview
+###### API Definition
+
 Main routes:
-- `POST /register`, `POST /login`, `GET /me`
-- KV: `POST/GET/DELETE /{key}`
-- Storage: `PUT /{key}`, `PROPFIND /`, `PATCH /{key}`
-- LLM: `POST /llm/chat`
+`POST /register`, 
+`POST /login`
+`GET /me`
+`POST/GET/DELETE /{key}`
+`PUT /{key}`
+`PROPFIND /`
+`PATCH /{key}`
+`POST /llm/chat`
 
-For full behavior details, see `docs/server.md`.
-
-## Writing a Server Plugin
+###### Writing a Server Plugin
 File: `src/plugins/<group>/<name>.js`
 
 ```js
@@ -126,16 +149,7 @@ export default function plugin(app) {
 }
 ```
 
-Rules:
-- Export one `default function(app)`
-- Route keys: `'GET /path'`, `'POST /path'`, `'GET *'`, etc.
-- Use `req` (not `_req`) and avoid `ctx` in plugins
-- Import `json`/`redir` from `src/server.js` for responses
-- Return `null` to pass to next handler
-- Append required envs to `app.requiredEnvs`
-- Enable plugin in `config.json`
-
-## Writing Custom Web Components
+###### Writing Custom Web Components
 Define in `public/components.js`:
 ```js
 export const components = {
@@ -166,29 +180,7 @@ window.state.count = 1
 -> render matching window.components[tag]
 ```
 
-Example:
-```html
-<counter-view data="count"></counter-view>
-<script>
-  window.components['counter-view'] = (v) => `<div>${v}</div>`
-  window.state.count = 1
-</script>
-```
-
-Notes:
-- Updates are key-based (`data="key"`)
-- Only registered custom tags render
-- New nodes auto-init via `MutationObserver`
-
-## `client.js` Exports
-Available imports from `https://unpkg.com/vanilla-light`:
-- DOM: `$`, `$$`, `$c`
-- KV/storage helpers: `get`, `set`, `put`, `del`, `purge`, `list`, `download`
-- Generic HTTP helper: `fetchJson`
-- User/auth helpers: `me`, `login`, `logout`, `loginAuth0`, `logoutAuth0`, `registerBearer`, `loginBearer`, `logoutBearer`
-- Reactivity/components: `state`, `initComponents`
-
-## Tests
+###### Tests
 Run with server up:
 ```bash
 bash test/server.sh
