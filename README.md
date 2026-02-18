@@ -1,5 +1,13 @@
-<div style="background-color:#fff9c4;padding:10px;">
-![vanilla-light](assets/vl.jpg)
+<table border="0">
+<tr>
+<td>
+<img src="assets/cone.svg" alt="vanilla-light" width="120" />
+</td>
+<td>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 2rem; font-weight: 600; line-height: 1.1;">Vanilla Light</div>
+</td>
+</tr>
+</table>
 
 [![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
 
@@ -187,4 +195,3 @@ bash test/server.sh
 # optional
 BASE=https://localhost:3000 bash test/server.sh
 ```
-</div>
