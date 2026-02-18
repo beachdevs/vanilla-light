@@ -1,20 +1,19 @@
 ![vanilla-light](assets/vl.jpg)
+
 [![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
 
 Vanilla-light is a no-build, dependency-free full-stack framework with a reactive browser client and an HTTPS Bun server.
 
-###### Why I built this
-This is the culmination of 20 years of writing, rewriting, imagining, and re-imagining what is the minimal core framework and best abstraction of the web client/server model.
+#### Why I built this
+This is the culmination of 20 years of writing, re-writing, imagining, and re-imagining what is the minimal core framework and best abstraction of the web client/server model.
 
 Web standards give us all the tools we need to create applications. Removing complexity and the sheer number of things you have to learn makes them easier to build. 
 
-Sophisticated server and client rendering schemes, bloated thousand-dependency builds, and quirky frame dependent abstractions do not belong here.
+Most apps are really not that complex. They consist of a front-end, back-end server, auth, storage, and (lately) communication with llms. Sophisticated server and client rendering schemes, bloated thousand-dependency builds, and quirky frame dependent abstractions do not belong here.
 
-Most apps are really not that complex. They consist of a front-end, back-end server, auth, storage, and (lately) communication with llms.
+Vanilla light is intended to be an easy to adopt minimal core for humans to build things quickly and go from imagination to application.
 
-Vanilla light is an easy to adopt minimal core for humans to build things, to more quickly go from imagination to application.
-
-###### Features
+#### Features
 - Standalone front and back-ends
 - Can be hosted separately
 - No frontend build step
@@ -32,7 +31,7 @@ Or clone this repo:
 $ bun start.
 ```
 
-###### CLI
+#### CLI
 Manage server with:
 ```bash
 npx vanilla-light <command>
@@ -51,7 +50,7 @@ vlserver certsdir certs
 vlserver +plugin auth/bearer.js
 vlserver -plugin auth/bearer.js
 ```
-###### Configuration 
+#### Configuration 
 ~/.vanilla-light/config.json
 ```json
 {
@@ -71,7 +70,7 @@ vlserver -plugin auth/bearer.js
 Https should generally be used.
 Enable SSL, except when behind a reverse-proxy.
 
-###### Frontend
+#### Frontend
 The front-end consists of a client.js file, which contains
 helper functions to send/get key vals stored on the server.
 
@@ -104,11 +103,11 @@ Included in your HTML
 <script src='components.js></script>
 ```
 
-###### Client server architecture
+#### Client server architecture
 
 ![Client/server architecture](https://i.ibb.co/hJL6dMqn/clientserver.png)
 
-###### Server secrets
+#### Server secrets
 Plugins get their secrets (api keys, etc..) from env
 
 ```bash
@@ -122,7 +121,7 @@ CLOUDFLARE_PUBLIC_URL=...
 OPENROUTER_API_KEY=...
 ```
 
-###### API Definition
+#### API Definition
 
 Main routes:
 `POST /register`, 
@@ -134,7 +133,7 @@ Main routes:
 `PATCH /{key}`
 `POST /llm/chat`
 
-###### Writing a Server Plugin
+#### Writing a Server Plugin
 File: `src/plugins/<group>/<name>.js`
 
 ```js
