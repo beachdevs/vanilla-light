@@ -1,13 +1,7 @@
-<table border="0">
-<tr>
-<td>
-<img src="assets/cone.svg" alt="vanilla-light" width="120" />
-</td>
-<td>
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 2rem; font-weight: 600; line-height: 1.1;">Vanilla Light</div>
-</td>
-</tr>
-</table>
+
+<img src="assets/cone.svg" alt="vanilla-light" width="60" />
+
+## Vanilla Light
 
 [![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
 
@@ -29,7 +23,7 @@ Vanilla light is intended to be an easy to adopt minimal core for humans to buil
 - No runtime npm dependencies
 - Reactive `window.state` + custom web components
 - Plugin-driven backend (`src/plugins`)
-- Auth (auth0, bearer) | Db (jsonl) | llm (openrouter)
+- Auth (auth0, bearer) | Db (jsonl) | llm (OpenAI-compatible providers)
 
 ## Quick Start
 ```bash
@@ -69,7 +63,7 @@ vlserver -plugin auth/bearer.js
     "auth/bearer.js",
     "storage/s3.js",
     "storage/kvfile.js",
-    "llm/llmchat.js"
+    "llm/openai.js"
   ],
   "port": 3000,
   "disable_ssl": true,
@@ -127,7 +121,10 @@ CLOUDFLARE_ACCESS_KEY_ID=...
 CLOUDFLARE_SECRET_ACCESS_KEY=...
 CLOUDFLARE_BUCKET_NAME=...
 CLOUDFLARE_PUBLIC_URL=...
-OPENROUTER_API_KEY=...
+# Any OpenAI-compatible Chat Completions endpoint
+LLM_ENDPOINT=https://api.openai.com/v1/chat/completions
+# API key for whatever provider powers LLM_ENDPOINT (OpenAI, OpenRouter, etc.)
+LLM_API_KEY=...
 ```
 
 #### API Definition

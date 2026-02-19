@@ -5,7 +5,7 @@
     "auth/bearer.js",
     "storage/s3.js",
     "storage/kvfile.js",
-    "llm/llmchat.js"
+    "llm/openai.js"
   ],
   "port": 3000,
   "disable_ssl": true,
