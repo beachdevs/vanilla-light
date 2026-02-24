@@ -1,5 +1,5 @@
 export default function (app) {
-  app.requiredEnvs = [...(app.requiredEnvs || []), "OPENAI_COMPATIBLE_API_KEY", "OPENAI_COMPATIBLE_BASE_URL"];
+  app.requiredEnvs = [...(app.requiredEnvs || []), "OPENAI_BASE_URL", "OPENAI_API_KEY", "OPENAI_MODEL"];
 
   function resolveChatEndpoint(raw) {
     const endpoint = String(raw || "").trim();
@@ -9,16 +9,11 @@ export default function (app) {
   }
 
   const k = "POST /llm/chat";
-  const fn = async (req, ctx) => {
-    const endpoint = Bun.env.OPENAI_COMPATIBLE_BASE_URL + '/chat/completions';
-    const apiKey = Bun.env.OPENAI_COMPATIBLE_API_KEY;
-    const auth = apiKey?.startsWith("Bearer ") ? apiKey : `Bearer ${apiKey || ""}`;
+  const fn = async (req, ctx) => 
+  {
+    const {OPENAI_BASE_URL, OPENAI_API_KEY, OPENAI_MODEL} = Bun.env;
 
-    const body = await req.json().catch(() => ({}));
-    const model = Bun.env.OPENAI_COMPATIBLE_MODEL;
-    if (model) body.model = model;
-
-    const res = await fetch(endpoint, {
+    const res = await fetch(OPENAI_BASE_URL, {
       method: "POST",
       headers: { Authorization: auth, "Content-Type": "application/json" },
       body: JSON.stringify(body),

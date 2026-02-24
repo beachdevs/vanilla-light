@@ -4,3 +4,4 @@ certs/*.pem
 data/*
 bin/server
 AGENTS.md
+.env

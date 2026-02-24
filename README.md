@@ -3,7 +3,7 @@
 
 ## Vanilla Light
 
-[![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/enigmatic.svg)](https://www.npmjs.com/package/enigmatic)
+[![npm version](https://img.shields.io/npm/v/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light) [![runtime](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh/) [![npm downloads](https://img.shields.io/npm/dm/vanilla-light.svg)](https://www.npmjs.com/package/vanilla-light)
 
 Vanilla-light is a no-build, dependency-free full-stack framework with a reactive browser client and an HTTPS Bun server.
 
@@ -31,7 +31,7 @@ npx vanilla-light
 ```
 Or clone this repo:
 ```
-$ bun start.
+$ bun start
 ```
 
 #### CLI
@@ -70,7 +70,7 @@ vlserver -plugin auth/bearer.js
   "certs_dir": "certs"
 }
 ```
-Https should generally be used.
+HTTPS should generally be used.
 Enable SSL, except when behind a reverse-proxy.
 
 #### Frontend
@@ -79,32 +79,28 @@ helper functions to send/get key vals stored on the server.
 
 Client import:
 ```js
-import { $, $$, get, set, del, me } from 'client.js'
+import { $, $$, get, set, del, me } from '/client.js'
 -- or --
-import { $, $$, get, set, del, me } from 'https://unpkg.com/vanilla-light'
+import { $, $$, get, set, del, me } from 'https://unpkg.com/vanilla-light/client.js'
 ```
 
-Web components are defined and used in the simplest way. A components.js file which contains their definitions.
+Web components are defined and used in the simplest way. A `components.js` file contains their definitions.
 
-All components are assigned to window.custom, and defined in a single components.js.
-A component is simply a function that returns (or renders html) and run at page load
+All components are exported as `components` from `components.js`.
+A component is simply a function that returns (or renders html) and runs at page load.
 
 ```
-window.custom = 
-{
-  "simple-hello": ()=>`Hello world!`,
+export const components = {
+  "simple-hello": () => `Hello world!`,
   "hello-world": {
     prop: (data) => `${data} World`,
-    render: function(data) { 
-      return this.prop(data); 
+    render: function(data) {
+      return this.prop(data);
     }
   }
-}
+};
 ```
-Included in your HTML
-```
-<script src='components.js></script>
-```
+`/client.js` automatically imports `/components.js` when present.
 
 #### Client server architecture
 
@@ -143,7 +139,7 @@ Main routes:
 File: `src/plugins/<group>/<name>.js`
 
 ```js
-import { json, redir } from '../src/server.js'
+import { json, redir } from '../../server.js'
 
 export default function plugin(app) {
   app.routes = {
@@ -182,7 +178,7 @@ Use in HTML:
 window.state.count = 1
 -> proxy set(...)
 -> find [data="count"]
--> render matching window.components[tag]
+-> render matching registered component
 ```
 
 ###### Tests
